@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { JetBrains_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -19,10 +20,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${jetbrainsMono.variable} bg-dark-2 antialiased`}>
-        {children}
-      </body>
-    </html>
+    <ClerkProvider
+      appearance={{
+        layout: {
+          logoImageUrl: "/icons/yoom-logo.svg",
+          socialButtonsVariant: "iconButton",
+        },
+        variables: {
+          colorText: "#FFF",
+          colorPrimary: "#0E78F9",
+          colorBackground: "#1C1F2E",
+          colorInputBackground: "#252A41",
+          colorInputText: "#FFF",
+        },
+      }}
+    >
+      <html lang="en">
+        <body className={`${jetbrainsMono.variable} bg-dark-2 antialiased`}>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
