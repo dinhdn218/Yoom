@@ -1,9 +1,119 @@
-import React from "react";
+import { cn } from "@/lib/utils";
+import {
+  CallControls,
+  CallingState,
+  CallParticipantsList,
+  CallStatsButton,
+  PaginatedGridLayout,
+  SpeakerLayout,
+  useCallStateHooks,
+} from "@stream-io/video-react-sdk";
+import React, { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LayoutList, User } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import EndCallButton from "./EndCallButton";
+import Loader from "./Loader";
+
+type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 
 const MeetingRoom = () => {
+  const router = useRouter();
+  const [layout, setLayout] = useState<CallLayoutType>("speaker-left");
+  const searchParams = useSearchParams();
+  const isPersonalRoom = !!searchParams.get("personal");
+  const [showParticipants, setShowParticipants] = useState<boolean>(false);
+  const { useCallCallingState } = useCallStateHooks();
+  const callingState = useCallCallingState();
+
+  if (
+    callingState !== CallingState.JOINED &&
+    callingState !== CallingState.LEFT
+  ) {
+    return <Loader />;
+  }
+  if (callingState === CallingState.LEFT) {
+    router.push("/");
+  }
+
+  const CallLayout = () => {
+    switch (layout) {
+      case "grid":
+        return <PaginatedGridLayout />;
+        break;
+      case "speaker-right":
+        return <SpeakerLayout participantsBarPosition={"left"} />;
+        break;
+      default:
+        return <SpeakerLayout participantsBarPosition={"right"} />;
+        break;
+    }
+  };
+
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
-      MeetingRoom
+      <div className="relative flex size-full items-center justify-center">
+        <div className="flex size-full max-w-[1000px] items-center">
+          <CallLayout />
+        </div>
+        <div
+          className={cn("h-[calc(100vh-86px)] hidden ml-2", {
+            "show-block": showParticipants,
+          })}
+        >
+          <CallParticipantsList onClose={() => setShowParticipants(false)} />
+        </div>
+      </div>
+
+      <div className="fixed bottom-0 flex w-full items-center justify-center gap-4 flex-wrap p-3 md:p-0">
+        <CallControls
+          onLeave={() => {
+            router.push("/");
+          }}
+        />
+
+        <DropdownMenu>
+          <div className="flex items-center">
+            <DropdownMenuTrigger className="cursor-pointer rounded-full bg-[#19232d] p-3 hover:bg-[#4c535b]">
+              <LayoutList size={20} className="text-white" />
+            </DropdownMenuTrigger>
+          </div>
+
+          <DropdownMenuContent className="border-dark-1 bg-dark-1 text-white">
+            {["Grid", "Speaker-Left", "Speaker-Right"].map((item, index) => {
+              return (
+                <div key={index}>
+                  <DropdownMenuItem
+                    className={cn("cursor-pointer", {
+                      "bg-[#323b44]": layout === item.toLowerCase(),
+                    })}
+                    onClick={() =>
+                      setLayout(item.toLowerCase() as CallLayoutType)
+                    }
+                  >
+                    {item}
+                  </DropdownMenuItem>
+                </div>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <CallStatsButton />
+
+        <button onClick={() => setShowParticipants((prev) => !prev)}>
+          <div className="cursor-pointer rounded-full bg-[#19232d] p-3 hover:bg-[#4c535b]">
+            <User size={20} className="text-white" />
+          </div>
+        </button>
+
+        {!isPersonalRoom ? <EndCallButton /> : null}
+      </div>
     </section>
   );
 };
