@@ -16,7 +16,7 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
     useGetCalls();
   const router = useRouter();
   const [recordings, setRecordings] = useState<CallRecording[]>([]);
-  const [isLoadingRecords, setIsLoadingRecords] = useState<boolean>(false);
+  const [, setIsLoadingRecords] = useState<boolean>(false);
 
   const getCalls = () => {
     switch (type) {
@@ -46,6 +46,7 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
 
   useEffect(() => {
     const fetchRecordings = async () => {
+      setIsLoadingRecords(true);
       try {
         const callData = await Promise.all(
           callRecordings?.map((meeting) => meeting.queryRecordings()) ?? []
@@ -61,11 +62,12 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
         toast({
           title: "Try again later",
         });
+      } finally {
+        setIsLoadingRecords(false);
       }
     };
 
     if (type === "recordings") {
-      setIsLoadingRecords(true);
       fetchRecordings();
     }
   }, [type, callRecordings]);
@@ -73,7 +75,7 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
   const calls = getCalls();
   const noCallsMessage = getNoCallsMessage();
 
-  if (isLoading || isLoadingRecords) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
