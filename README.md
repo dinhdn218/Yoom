@@ -65,9 +65,9 @@ Mô tả ngắn gọn về dự án:
   ```
 - Chạy ứng dụng:
   ```bash
-  npm start
+  npm run dev
   # hoặc
-  yarn start
+  yarn dev
   ```
 **3. Lấy thông tin file ```.env.local```**
 - Đăng nhập vào [https://dashboard.clerk.com/](https://dashboard.clerk.com/). Sau đó chọn vào project Yoom (nếu đã tạo) hoặc tạo mới project.
