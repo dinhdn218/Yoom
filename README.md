@@ -46,17 +46,20 @@ Mô tả ngắn gọn về dự án:
 
 **2. Cách cài đặt**
 - Clone repository:
+  
   ```bash
   git clone git@github.com:dinhdn218/Yoom.git
   cd Yoom
   ```
 - Cài đặt các phụ thuộc:
+  
   ```bash
   npm install
   # hoặc
   yarn install
   ```
 - Tạo tệp ```.env.local``` và cập nhật thông tin cấu hình:
+  
   ```plaintext
   NEXT_PUBLIC_BASE_URL=localhost:3000
   NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
@@ -64,6 +67,7 @@ Mô tả ngắn gọn về dự án:
   Các cấu hình còn lại, xin mời xem tiếp bước 3...
   ```
 - Chạy ứng dụng:
+  
   ```bash
   npm run dev
   # hoặc
@@ -72,11 +76,13 @@ Mô tả ngắn gọn về dự án:
 **3. Lấy thông tin file ```.env.local```**
 - Đăng nhập vào [https://dashboard.clerk.com/](https://dashboard.clerk.com/). Sau đó chọn vào project Yoom (nếu đã tạo) hoặc tạo mới project.
 - Chọn vào thư mục ```Configure``` => ```API Keys``` => ```Copy```
+  
   ```example
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dG9nZ*******sZS04OC5jbGVyay5hY2NvdW50c****
   CLERK_SECRET_KEY=sk_test_fZ6aIu6Mhs********XbsRniMyxKb****4q8MhQE
   ```
 - Đăng nhập vào [https://getstream.io/](https://getstream.io/), sau đó copy ```key``` và ```secret key```
+  
   ```example
   NEXT_PUBLIC_STREAM_API_KEY=mwajjz2*****
   STREAM_SECRET_KEY=6wvhrvw24yv27be4dsn******ssbctua9h644bhq3q3q757g5zb******
